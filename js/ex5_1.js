@@ -1,90 +1,85 @@
 var pacientes = [];       // declara vetor global
 var urgencias = [];
 
-function adicionarPaciente() {
-  // cria referência aos elementos de entrada e saída de dados da página
-  var inPaciente = document.getElementById("inPaciente");
+function atualizarLista() {
   var outLista = document.getElementById("outLista");
-  
-  var nome = inPaciente.value;           // obtém nome do paciente
+  var lista = "";
 
-  // verifica preenchimento do nome do paciente
+  if (urgencias.length > 0) {
+    lista += "Urgências:\n";
+
+    for (var i = 0; i < urgencias.length; i++) {
+      lista += (i + 1) + ". " + urgencias[i] + " - URGÊNCIA\n";
+    }
+
+    lista += "\n";
+  }
+
+  if (pacientes.length > 0) {
+    lista += "Fila Normal:\n";
+
+    for (var i = 0; i < pacientes.length; i++) {
+      lista += (i + 1) + ". " + pacientes[i] + "\n";
+    }
+  }
+
+  outLista.textContent = lista;
+}
+
+function adicionarPaciente() {
+  var inPaciente = document.getElementById("inPaciente");
+  var nome = inPaciente.value;
+
   if (nome == "") {
     alert("Informe o nome do paciente");
     inPaciente.focus();
     return;
   }
 
-  pacientes.push(nome);    // adiciona o nome no final do vetor
+  pacientes.push(nome);
 
-  var lista = "";          // string para concatenar pacientes
+  atualizarLista();
 
-  // percorre os elementos do vetor 
-  for (i = 0; i < pacientes.length; i++) {
-    lista += (i + 1) + ". " + pacientes[i] + "\n";
-  }
-
-  // altera o conteúdo da tag outLista
-  outLista.textContent = lista;
-
-  // limpa campo e posiciona cursor em inPaciente
   inPaciente.value = "";
   inPaciente.focus();
 }
-// cria referência ao btAdicionar e associa function ao evento click
+
 var btAdicionar = document.getElementById("btAdicionar");
 btAdicionar.addEventListener("click", adicionarPaciente);
 
 
 function adicionarUrgencia() {
-  // cria referência aos elementos de entrada e saída de dados da página
   var inPaciente = document.getElementById("inPaciente");
-  var outLista = document.getElementById("outLista");
-  
-  var nome = inPaciente.value;           // obtém nome do paciente
+  var nome = inPaciente.value;
 
-  // verifica preenchimento do nome do paciente
   if (nome == "") {
     alert("Informe o nome do paciente");
     inPaciente.focus();
     return;
   }
 
-  // adiciona paciente no início do vetor
   urgencias.push(nome);
 
-  // string para concatenar pacientes
-  var lista = "";
+  atualizarLista();
 
-  // percorre os elementos do vetor 
-  for (i = 0; i < pacientes.length; i++) {
-    lista += (i + 1) + ". " + pacientes[i] + "\n";
-  }
-
-  // altera o conteúdo da tag outLista
-  outLista.textContent = lista;
-
-  // limpa campo e posiciona cursor em inPaciente
   inPaciente.value = "";
   inPaciente.focus();
 }
+
 var btUrgencia = document.getElementById("btUrgencia");
 btUrgencia.addEventListener("click", adicionarUrgencia);
 
 
 function atenderPaciente() {
-  // verifica se vetor pacientes está vazio 
-  if (pacientes.length == 0) {
+  var inPaciente = document.getElementById("inPaciente");
+
+  if (urgencias.length == 0 && pacientes.length == 0) {
     alert("Não há pacientes na lista de espera");
     inPaciente.focus();
     return;
   }
 
-  // cria referência aos elementos de saída de dados
   var outAtendimento = document.getElementById("outAtendimento");
-  var outLista = document.getElementById("outLista");
-
-  // remove paciente do início da fila (e obtém nome)
   var atender;
 
   if (urgencias.length > 0) {
@@ -93,19 +88,10 @@ function atenderPaciente() {
     atender = pacientes.shift();
   }
 
-  // exibe nome do paciente em atendimento
   outAtendimento.textContent = atender;
 
-  // string para concatenar pacientes
-  var lista = "";
-
-  // percorre os elementos do vetor 
-  for (i = 0; i < pacientes.length; i++) {
-    lista += (i + 1) + ". " + pacientes[i] + "\n";
-  }
-
-  // altera o conteúdo da tag outLista
-  outLista.textContent = lista;
+  atualizarLista();
 }
+
 var btAtender = document.getElementById("btAtender");
 btAtender.addEventListener("click", atenderPaciente);
